@@ -1,0 +1,2 @@
+2026-10-17 21:24:35,334 fail2ban                [332]: ERROR   NOK: ('nope',)
+Sorry but the jail 'nope' does not exist

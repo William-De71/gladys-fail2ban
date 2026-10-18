@@ -1,0 +1,49 @@
+name: Bug report
+description: Something does not work as described in the documentation.
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to report a problem. The logs never contain your SSH password or private key; they name your server, its jails and banned addresses: remove what you do not want to share.
+  - type: input
+    id: gladys-version
+    attributes:
+      label: Gladys version
+      description: Settings → System.
+      placeholder: '5.2.0'
+    validations:
+      required: true
+  - type: input
+    id: integration-version
+    attributes:
+      label: Integration version
+      description: Integrations → Fail2Ban, or Settings → Supervision.
+      placeholder: '0.1.0'
+    validations:
+      required: true
+  - type: input
+    id: fail2ban
+    attributes:
+      label: Fail2Ban and its server
+      description: 'The version of Fail2Ban (fail2ban-client version), the system, and how it runs (package, Docker).'
+      placeholder: '1.0.2, Debian 12, package'
+    validations:
+      required: true
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened, and what you expected
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+  - type: textarea
+    id: logs
+    attributes:
+      label: Logs
+      description: |
+        Press the **Diagnostic** button of the configuration, then copy the lines starting with “Fail2Ban diagnostic” from the Logs tab of the integration. In developer mode, the environment variable `DEBUG=gladys-integration-sdk` adds the SDK debug logs.
+      render: text

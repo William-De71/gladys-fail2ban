@@ -1,0 +1,1242 @@
+{
+  "manifest_version": 1,
+  "type": "device",
+  "name": "Fail2Ban",
+  "description": {
+    "en": "Fail2Ban over SSH: jails, banned IPs, ban and unban from scenes and widgets.",
+    "fr": "Fail2Ban via SSH : jails, IP bannies, bannir et débannir depuis scènes et widgets.",
+    "de": "Fail2Ban per SSH: Jails, gesperrte IPs, Sperren und Entsperren per Szene und Widget.",
+    "es": "Fail2Ban por SSH: jails, IP bloqueadas, bloquear y desbloquear desde escenas y widgets."
+  },
+  "version": "0.1.0",
+  "docker_image": "ghcr.io/william-de71/gladys-fail2ban:0.1.0",
+  "gladys_version": ">=5.2.0",
+  "categories": ["security", "network"],
+  "cover_image": "https://raw.githubusercontent.com/William-De71/gladys-fail2ban/main/cover.jpg",
+  "transports": ["local"],
+  "config_schema": [
+    {
+      "key": "intro",
+      "type": "section",
+      "label": {
+        "en": "Fail2Ban server",
+        "fr": "Serveur Fail2Ban",
+        "de": "Fail2Ban-Server",
+        "es": "Servidor Fail2Ban"
+      },
+      "description": {
+        "en": "Fail2Ban only answers on the machine it protects. The integration connects to it over SSH and runs fail2ban-client there. Enter the LAN address of that machine (not localhost: that is the container of the integration, even when Fail2Ban runs on the Gladys host), and a user allowed to run fail2ban-client.",
+        "fr": "Fail2Ban ne répond que sur la machine qu’il protège. L’intégration s’y connecte en SSH et y lance fail2ban-client. Indiquez l’adresse de cette machine sur le réseau local (pas localhost : c’est le conteneur de l’intégration, même si Fail2Ban tourne sur la machine de Gladys) et un utilisateur autorisé à lancer fail2ban-client.",
+        "de": "Fail2Ban antwortet nur auf dem Rechner, den es schützt. Die Integration verbindet sich per SSH und führt dort fail2ban-client aus. Gib die LAN-Adresse dieses Rechners an (nicht localhost: das ist der Container der Integration, auch wenn Fail2Ban auf dem Gladys-Rechner läuft) und einen Benutzer, der fail2ban-client ausführen darf.",
+        "es": "Fail2Ban solo responde en la máquina que protege. La integración se conecta a ella por SSH y ejecuta allí fail2ban-client. Indique la dirección de esa máquina en la red local (no localhost: es el contenedor de la integración, aunque Fail2Ban se ejecute en la máquina de Gladys) y un usuario autorizado a ejecutar fail2ban-client."
+      }
+    },
+    {
+      "key": "host",
+      "type": "string",
+      "required": true,
+      "label": {
+        "en": "Address of the server",
+        "fr": "Adresse du serveur",
+        "de": "Adresse des Servers",
+        "es": "Dirección del servidor"
+      },
+      "description": {
+        "en": "IP address or host name of the machine running Fail2Ban.",
+        "fr": "Adresse IP ou nom d’hôte de la machine qui exécute Fail2Ban.",
+        "de": "IP-Adresse oder Hostname des Rechners, auf dem Fail2Ban läuft.",
+        "es": "Dirección IP o nombre de host de la máquina que ejecuta Fail2Ban."
+      },
+      "placeholder": {
+        "en": "192.168.1.10",
+        "fr": "192.168.1.10",
+        "de": "192.168.1.10",
+        "es": "192.168.1.10"
+      }
+    },
+    {
+      "key": "port",
+      "type": "number",
+      "default": 22,
+      "min": 1,
+      "max": 65535,
+      "label": {
+        "en": "SSH port",
+        "fr": "Port SSH",
+        "de": "SSH-Port",
+        "es": "Puerto SSH"
+      }
+    },
+    {
+      "key": "username",
+      "type": "string",
+      "required": true,
+      "label": {
+        "en": "SSH user",
+        "fr": "Utilisateur SSH",
+        "de": "SSH-Benutzer",
+        "es": "Usuario SSH"
+      },
+      "description": {
+        "en": "A dedicated user is best, allowed to run fail2ban-client only (see the documentation).",
+        "fr": "Un utilisateur dédié, autorisé à lancer fail2ban-client et rien d’autre, est préférable (voir la documentation).",
+        "de": "Am besten ein eigener Benutzer, der nur fail2ban-client ausführen darf (siehe Dokumentation).",
+        "es": "Lo mejor es un usuario dedicado, autorizado solo a ejecutar fail2ban-client (ver la documentación)."
+      },
+      "placeholder": {
+        "en": "gladys",
+        "fr": "gladys",
+        "de": "gladys",
+        "es": "gladys"
+      }
+    },
+    {
+      "key": "auth_method",
+      "type": "select",
+      "default": "key",
+      "label": {
+        "en": "Authentication",
+        "fr": "Authentification",
+        "de": "Authentifizierung",
+        "es": "Autenticación"
+      },
+      "options": [
+        {
+          "value": "key",
+          "label": {
+            "en": "Key of the integration (recommended)",
+            "fr": "Clé de l’intégration (recommandé)",
+            "de": "Schlüssel der Integration (empfohlen)",
+            "es": "Clave de la integración (recomendado)"
+          }
+        },
+        {
+          "value": "password",
+          "label": {
+            "en": "Password",
+            "fr": "Mot de passe",
+            "de": "Passwort",
+            "es": "Contraseña"
+          }
+        }
+      ]
+    },
+    {
+      "key": "password",
+      "type": "secret",
+      "label": {
+        "en": "SSH password",
+        "fr": "Mot de passe SSH",
+        "de": "SSH-Passwort",
+        "es": "Contraseña SSH"
+      },
+      "description": {
+        "en": "Only with the “Password” authentication.",
+        "fr": "Uniquement avec l’authentification « Mot de passe ».",
+        "de": "Nur mit der Authentifizierung „Passwort“.",
+        "es": "Solo con la autenticación «Contraseña»."
+      }
+    },
+    {
+      "key": "key_help",
+      "type": "section",
+      "label": {
+        "en": "Key and permissions",
+        "fr": "Clé et droits",
+        "de": "Schlüssel und Rechte",
+        "es": "Clave y permisos"
+      },
+      "description": {
+        "en": "With the key of the integration, save this form, click “Show the public key” below and add the line it gives to ~/.ssh/authorized_keys of the SSH user. fail2ban-client needs root: allow it without a password with a sudoers rule such as “gladys ALL=(root) NOPASSWD: /usr/bin/fail2ban-client”. For Fail2Ban in Docker, use the command “docker exec fail2ban fail2ban-client”.",
+        "fr": "Avec la clé de l’intégration, enregistrez ce formulaire, cliquez sur « Afficher la clé publique » plus bas et ajoutez la ligne obtenue au fichier ~/.ssh/authorized_keys de l’utilisateur SSH. fail2ban-client demande les droits root : autorisez-le sans mot de passe avec une règle sudoers comme « gladys ALL=(root) NOPASSWD: /usr/bin/fail2ban-client ». Pour Fail2Ban dans Docker, utilisez la commande « docker exec fail2ban fail2ban-client ».",
+        "de": "Mit dem Schlüssel der Integration: Speichere dieses Formular, klicke unten auf „Öffentlichen Schlüssel anzeigen“ und trage die angezeigte Zeile in ~/.ssh/authorized_keys des SSH-Benutzers ein. fail2ban-client braucht root-Rechte: Erlaube es ohne Passwort mit einer sudoers-Regel wie „gladys ALL=(root) NOPASSWD: /usr/bin/fail2ban-client“. Für Fail2Ban in Docker nutze den Befehl „docker exec fail2ban fail2ban-client“.",
+        "es": "Con la clave de la integración, guarde este formulario, haga clic en «Mostrar la clave pública» más abajo y añada la línea obtenida al archivo ~/.ssh/authorized_keys del usuario SSH. fail2ban-client necesita permisos de root: permítalo sin contraseña con una regla sudoers como «gladys ALL=(root) NOPASSWD: /usr/bin/fail2ban-client». Para Fail2Ban en Docker, use el comando «docker exec fail2ban fail2ban-client»."
+      }
+    },
+    {
+      "key": "command",
+      "type": "string",
+      "default": "sudo -n fail2ban-client",
+      "label": {
+        "en": "fail2ban-client command",
+        "fr": "Commande fail2ban-client",
+        "de": "Befehl fail2ban-client",
+        "es": "Comando fail2ban-client"
+      },
+      "description": {
+        "en": "How to call fail2ban-client on the server. Its arguments are added and quoted by the integration.",
+        "fr": "Comment appeler fail2ban-client sur le serveur. L’intégration ajoute et protège ses arguments.",
+        "de": "Wie fail2ban-client auf dem Server aufgerufen wird. Die Integration hängt die Argumente maskiert an.",
+        "es": "Cómo llamar a fail2ban-client en el servidor. La integración añade y protege sus argumentos."
+      },
+      "placeholder": {
+        "en": "sudo -n fail2ban-client",
+        "fr": "sudo -n fail2ban-client",
+        "de": "sudo -n fail2ban-client",
+        "es": "sudo -n fail2ban-client"
+      }
+    },
+    {
+      "key": "host_key",
+      "type": "string",
+      "label": {
+        "en": "Host key",
+        "fr": "Clé d’hôte",
+        "de": "Hostschlüssel",
+        "es": "Clave de host"
+      },
+      "description": {
+        "en": "SHA256 fingerprint of the SSH key of the server (ssh-keygen -lf /etc/ssh/ssh_host_ed25519_key.pub). Empty: the key seen at the first connection is trusted and kept.",
+        "fr": "Empreinte SHA256 de la clé SSH du serveur (ssh-keygen -lf /etc/ssh/ssh_host_ed25519_key.pub). Vide : la clé vue à la première connexion est approuvée et mémorisée.",
+        "de": "SHA256-Fingerabdruck des SSH-Schlüssels des Servers (ssh-keygen -lf /etc/ssh/ssh_host_ed25519_key.pub). Leer: Der bei der ersten Verbindung gesehene Schlüssel wird vertraut und gespeichert.",
+        "es": "Huella SHA256 de la clave SSH del servidor (ssh-keygen -lf /etc/ssh/ssh_host_ed25519_key.pub). Vacío: se confía en la clave vista en la primera conexión y se guarda."
+      },
+      "placeholder": {
+        "en": "SHA256:…",
+        "fr": "SHA256:…",
+        "de": "SHA256:…",
+        "es": "SHA256:…"
+      }
+    },
+    {
+      "key": "options",
+      "type": "section",
+      "label": {
+        "en": "Options",
+        "fr": "Options",
+        "de": "Optionen",
+        "es": "Opciones"
+      },
+      "description": {
+        "en": "Which jails become devices, and how often Fail2Ban is read. A ban shorter than the interval may be missed by the scenes.",
+        "fr": "Les jails proposées comme appareils, et la fréquence de lecture de Fail2Ban. Un bannissement plus court que l’intervalle peut échapper aux scènes.",
+        "de": "Welche Jails als Geräte angeboten werden und wie oft Fail2Ban gelesen wird. Eine Sperre, die kürzer als das Intervall ist, kann den Szenen entgehen.",
+        "es": "Qué jails se ofrecen como dispositivos y cada cuánto se lee Fail2Ban. Un bloqueo más corto que el intervalo puede escapar a las escenas."
+      }
+    },
+    {
+      "key": "jails",
+      "type": "string",
+      "label": {
+        "en": "Jails to follow",
+        "fr": "Jails à suivre",
+        "de": "Zu verfolgende Jails",
+        "es": "Jails a seguir"
+      },
+      "description": {
+        "en": "Jail names separated by commas. Empty: every jail of the server.",
+        "fr": "Noms de jails séparés par des virgules. Vide : toutes les jails du serveur.",
+        "de": "Jail-Namen, durch Kommas getrennt. Leer: alle Jails des Servers.",
+        "es": "Nombres de jails separados por comas. Vacío: todas las jails del servidor."
+      },
+      "placeholder": {
+        "en": "sshd, recidive",
+        "fr": "sshd, recidive",
+        "de": "sshd, recidive",
+        "es": "sshd, recidive"
+      }
+    },
+    {
+      "key": "interval",
+      "type": "select",
+      "default": "60",
+      "label": {
+        "en": "Reading interval",
+        "fr": "Intervalle de lecture",
+        "de": "Leseintervall",
+        "es": "Intervalo de lectura"
+      },
+      "options": [
+        {
+          "value": "30",
+          "label": {
+            "en": "Every 30 seconds",
+            "fr": "Toutes les 30 secondes",
+            "de": "Alle 30 Sekunden",
+            "es": "Cada 30 segundos"
+          }
+        },
+        {
+          "value": "60",
+          "label": {
+            "en": "Every minute",
+            "fr": "Toutes les minutes",
+            "de": "Jede Minute",
+            "es": "Cada minuto"
+          }
+        },
+        {
+          "value": "120",
+          "label": {
+            "en": "Every 2 minutes",
+            "fr": "Toutes les 2 minutes",
+            "de": "Alle 2 Minuten",
+            "es": "Cada 2 minutos"
+          }
+        },
+        {
+          "value": "300",
+          "label": {
+            "en": "Every 5 minutes",
+            "fr": "Toutes les 5 minutes",
+            "de": "Alle 5 Minuten",
+            "es": "Cada 5 minutos"
+          }
+        }
+      ]
+    },
+    {
+      "key": "language",
+      "type": "select",
+      "default": "auto",
+      "label": {
+        "en": "Language of the texts",
+        "fr": "Langue des textes",
+        "de": "Sprache der Texte",
+        "es": "Idioma de los textos"
+      },
+      "description": {
+        "en": "Device names and the texts given to scenes. Automatic: the language of the last widget shown.",
+        "fr": "Noms des appareils et textes transmis aux scènes. Automatique : la langue du dernier widget affiché.",
+        "de": "Gerätenamen und die an Szenen übergebenen Texte. Automatisch: die Sprache des zuletzt angezeigten Widgets.",
+        "es": "Nombres de los dispositivos y textos pasados a las escenas. Automático: el idioma del último widget mostrado."
+      },
+      "options": [
+        {
+          "value": "auto",
+          "label": {
+            "en": "Automatic",
+            "fr": "Automatique",
+            "de": "Automatisch",
+            "es": "Automático"
+          }
+        },
+        {
+          "value": "en",
+          "label": {
+            "en": "English",
+            "fr": "English",
+            "de": "English",
+            "es": "English"
+          }
+        },
+        {
+          "value": "fr",
+          "label": {
+            "en": "Français",
+            "fr": "Français",
+            "de": "Français",
+            "es": "Français"
+          }
+        },
+        {
+          "value": "de",
+          "label": {
+            "en": "Deutsch",
+            "fr": "Deutsch",
+            "de": "Deutsch",
+            "es": "Deutsch"
+          }
+        },
+        {
+          "value": "es",
+          "label": {
+            "en": "Español",
+            "fr": "Español",
+            "de": "Español",
+            "es": "Español"
+          }
+        }
+      ]
+    }
+  ],
+  "actions": [
+    {
+      "key": "test_connection",
+      "timeout_seconds": 60,
+      "label": {
+        "en": "Test the connection",
+        "fr": "Tester la connexion",
+        "de": "Verbindung testen",
+        "es": "Probar la conexión"
+      },
+      "description": {
+        "en": "Connects over SSH, runs fail2ban-client and lists the jails.",
+        "fr": "Se connecte en SSH, lance fail2ban-client et liste les jails.",
+        "de": "Verbindet sich per SSH, führt fail2ban-client aus und listet die Jails auf.",
+        "es": "Se conecta por SSH, ejecuta fail2ban-client y enumera las jails."
+      }
+    },
+    {
+      "key": "show_public_key",
+      "label": {
+        "en": "Show the public key",
+        "fr": "Afficher la clé publique",
+        "de": "Öffentlichen Schlüssel anzeigen",
+        "es": "Mostrar la clave pública"
+      },
+      "description": {
+        "en": "The line to add to authorized_keys on the server.",
+        "fr": "La ligne à ajouter à authorized_keys sur le serveur.",
+        "de": "Die Zeile, die in authorized_keys auf dem Server gehört.",
+        "es": "La línea que hay que añadir a authorized_keys en el servidor."
+      }
+    },
+    {
+      "key": "forget_host_key",
+      "label": {
+        "en": "Forget the host key",
+        "fr": "Oublier la clé d’hôte",
+        "de": "Hostschlüssel vergessen",
+        "es": "Olvidar la clave de host"
+      },
+      "description": {
+        "en": "After a reinstall of the server: trust the new key at the next connection.",
+        "fr": "Après une réinstallation du serveur : faire confiance à la nouvelle clé à la prochaine connexion.",
+        "de": "Nach einer Neuinstallation des Servers: dem neuen Schlüssel bei der nächsten Verbindung vertrauen.",
+        "es": "Tras reinstalar el servidor: confiar en la nueva clave en la próxima conexión."
+      }
+    },
+    {
+      "key": "diagnostic",
+      "label": {
+        "en": "Diagnostic",
+        "fr": "Diagnostic",
+        "de": "Diagnose",
+        "es": "Diagnóstico"
+      },
+      "description": {
+        "en": "Writes the state of the integration to its logs, without any secret.",
+        "fr": "Écrit l’état de l’intégration dans ses journaux, sans aucun secret.",
+        "de": "Schreibt den Zustand der Integration in ihre Logs, ohne Geheimnisse.",
+        "es": "Escribe el estado de la integración en sus registros, sin ningún secreto."
+      }
+    }
+  ],
+  "widgets": [
+    {
+      "key": "overview",
+      "icon": "shield",
+      "action_timeout_seconds": 60,
+      "label": {
+        "en": "Fail2Ban",
+        "fr": "Fail2Ban",
+        "de": "Fail2Ban",
+        "es": "Fail2Ban"
+      },
+      "description": {
+        "en": "Banned IPs and failures per jail, with Ban and Unban buttons.",
+        "fr": "IP bannies et échecs par jail, avec boutons Bannir et Débannir.",
+        "de": "Gesperrte IPs und Fehlversuche je Jail, mit Sperren und Entsperren.",
+        "es": "IP bloqueadas y fallos por jail, con botones Bloquear y Desbloquear."
+      }
+    },
+    {
+      "key": "recent_bans",
+      "icon": "slash",
+      "action_timeout_seconds": 60,
+      "label": {
+        "en": "Fail2Ban bans",
+        "fr": "Bannissements Fail2Ban",
+        "de": "Fail2Ban-Sperren",
+        "es": "Bloqueos de Fail2Ban"
+      },
+      "description": {
+        "en": "The latest banned IPs, how long they stay banned, and Unban.",
+        "fr": "Les dernières IP bannies, la durée restante, et Débannir.",
+        "de": "Die zuletzt gesperrten IPs, die verbleibende Dauer und Entsperren.",
+        "es": "Las últimas IP bloqueadas, el tiempo restante y Desbloquear."
+      },
+      "settings": [
+        {
+          "key": "jail",
+          "type": "string",
+          "label": {
+            "en": "Jail",
+            "fr": "Jail",
+            "de": "Jail",
+            "es": "Jail"
+          },
+          "description": {
+            "en": "Only this jail. Empty: every jail followed.",
+            "fr": "Uniquement cette jail. Vide : toutes les jails suivies.",
+            "de": "Nur diese Jail. Leer: alle verfolgten Jails.",
+            "es": "Solo esta jail. Vacío: todas las jails seguidas."
+          },
+          "placeholder": {
+            "en": "sshd",
+            "fr": "sshd",
+            "de": "sshd",
+            "es": "sshd"
+          }
+        },
+        {
+          "key": "count",
+          "type": "number",
+          "default": 6,
+          "min": 1,
+          "max": 8,
+          "label": {
+            "en": "Bans shown",
+            "fr": "Bannissements affichés",
+            "de": "Angezeigte Sperren",
+            "es": "Bloqueos mostrados"
+          }
+        }
+      ]
+    }
+  ],
+  "scene_triggers": [
+    {
+      "key": "ip_banned",
+      "label": {
+        "en": "Fail2Ban: IP banned",
+        "fr": "Fail2Ban : IP bannie",
+        "de": "Fail2Ban: IP gesperrt",
+        "es": "Fail2Ban: IP bloqueada"
+      },
+      "description": {
+        "en": "An IP enters the banned list of a jail (not the ones banned by Gladys).",
+        "fr": "Une IP entre dans la liste des bannies d’une jail (hors bannissements faits par Gladys).",
+        "de": "Eine IP kommt auf die Sperrliste einer Jail (nicht die von Gladys gesperrten).",
+        "es": "Una IP entra en la lista de bloqueadas de una jail (salvo las bloqueadas por Gladys)."
+      },
+      "fields": [
+        {
+          "key": "jail",
+          "type": "string",
+          "label": {
+            "en": "Jail",
+            "fr": "Jail",
+            "de": "Jail",
+            "es": "Jail"
+          },
+          "description": {
+            "en": "Leave empty for any jail.",
+            "fr": "Laissez vide pour toutes les jails.",
+            "de": "Leer lassen für alle Jails.",
+            "es": "Déjelo vacío para cualquier jail."
+          },
+          "placeholder": {
+            "en": "sshd",
+            "fr": "sshd",
+            "de": "sshd",
+            "es": "sshd"
+          }
+        },
+        {
+          "key": "ip",
+          "type": "string",
+          "label": {
+            "en": "IP address",
+            "fr": "Adresse IP",
+            "de": "IP-Adresse",
+            "es": "Dirección IP"
+          },
+          "description": {
+            "en": "Only this address, for instance yours. Leave empty for any.",
+            "fr": "Uniquement cette adresse, par exemple la vôtre. Laissez vide pour toutes.",
+            "de": "Nur diese Adresse, zum Beispiel deine. Leer lassen für alle.",
+            "es": "Solo esta dirección, por ejemplo la suya. Déjelo vacío para cualquiera."
+          },
+          "placeholder": {
+            "en": "203.0.113.7",
+            "fr": "203.0.113.7",
+            "de": "203.0.113.7",
+            "es": "203.0.113.7"
+          },
+          "required": false
+        }
+      ],
+      "variables": [
+        {
+          "key": "ip",
+          "type": "string",
+          "label": {
+            "en": "IP address",
+            "fr": "Adresse IP",
+            "de": "IP-Adresse",
+            "es": "Dirección IP"
+          }
+        },
+        {
+          "key": "jail",
+          "type": "string",
+          "label": {
+            "en": "Jail",
+            "fr": "Jail",
+            "de": "Jail",
+            "es": "Jail"
+          }
+        },
+        {
+          "key": "banned_count",
+          "type": "number",
+          "label": {
+            "en": "IPs banned in the jail",
+            "fr": "IP bannies dans la jail",
+            "de": "Gesperrte IPs in der Jail",
+            "es": "IP bloqueadas en la jail"
+          }
+        },
+        {
+          "key": "total_banned",
+          "type": "number",
+          "label": {
+            "en": "Bans of the jail since start",
+            "fr": "Bannissements de la jail depuis le démarrage",
+            "de": "Sperren der Jail seit dem Start",
+            "es": "Bloqueos de la jail desde el arranque"
+          }
+        },
+        {
+          "key": "ban_seconds",
+          "type": "number",
+          "label": {
+            "en": "Ban duration (seconds)",
+            "fr": "Durée du bannissement (secondes)",
+            "de": "Sperrdauer (Sekunden)",
+            "es": "Duración del bloqueo (segundos)"
+          }
+        },
+        {
+          "key": "permanent",
+          "type": "boolean",
+          "label": {
+            "en": "Permanent ban",
+            "fr": "Bannissement définitif",
+            "de": "Dauerhafte Sperre",
+            "es": "Bloqueo permanente"
+          }
+        },
+        {
+          "key": "until",
+          "type": "string",
+          "label": {
+            "en": "Banned until",
+            "fr": "Bannie jusqu’à",
+            "de": "Gesperrt bis",
+            "es": "Bloqueada hasta"
+          }
+        },
+        {
+          "key": "server",
+          "type": "string",
+          "label": {
+            "en": "Server",
+            "fr": "Serveur",
+            "de": "Server",
+            "es": "Servidor"
+          }
+        }
+      ]
+    },
+    {
+      "key": "ip_unbanned",
+      "label": {
+        "en": "Fail2Ban: IP unbanned",
+        "fr": "Fail2Ban : IP débannie",
+        "de": "Fail2Ban: IP entsperrt",
+        "es": "Fail2Ban: IP desbloqueada"
+      },
+      "description": {
+        "en": "An IP leaves the banned list of a jail: its ban expired or someone unbanned it.",
+        "fr": "Une IP sort de la liste des bannies d’une jail : bannissement expiré ou levé.",
+        "de": "Eine IP verlässt die Sperrliste einer Jail: Sperre abgelaufen oder aufgehoben.",
+        "es": "Una IP sale de la lista de bloqueadas de una jail: bloqueo caducado o levantado."
+      },
+      "fields": [
+        {
+          "key": "jail",
+          "type": "string",
+          "label": {
+            "en": "Jail",
+            "fr": "Jail",
+            "de": "Jail",
+            "es": "Jail"
+          },
+          "description": {
+            "en": "Leave empty for any jail.",
+            "fr": "Laissez vide pour toutes les jails.",
+            "de": "Leer lassen für alle Jails.",
+            "es": "Déjelo vacío para cualquier jail."
+          },
+          "placeholder": {
+            "en": "sshd",
+            "fr": "sshd",
+            "de": "sshd",
+            "es": "sshd"
+          }
+        },
+        {
+          "key": "ip",
+          "type": "string",
+          "label": {
+            "en": "IP address",
+            "fr": "Adresse IP",
+            "de": "IP-Adresse",
+            "es": "Dirección IP"
+          },
+          "description": {
+            "en": "Only this address. Leave empty for any.",
+            "fr": "Uniquement cette adresse. Laissez vide pour toutes.",
+            "de": "Nur diese Adresse. Leer lassen für alle.",
+            "es": "Solo esta dirección. Déjelo vacío para cualquiera."
+          },
+          "placeholder": {
+            "en": "203.0.113.7",
+            "fr": "203.0.113.7",
+            "de": "203.0.113.7",
+            "es": "203.0.113.7"
+          },
+          "required": false
+        }
+      ],
+      "variables": [
+        {
+          "key": "ip",
+          "type": "string",
+          "label": {
+            "en": "IP address",
+            "fr": "Adresse IP",
+            "de": "IP-Adresse",
+            "es": "Dirección IP"
+          }
+        },
+        {
+          "key": "jail",
+          "type": "string",
+          "label": {
+            "en": "Jail",
+            "fr": "Jail",
+            "de": "Jail",
+            "es": "Jail"
+          }
+        },
+        {
+          "key": "banned_count",
+          "type": "number",
+          "label": {
+            "en": "IPs banned in the jail",
+            "fr": "IP bannies dans la jail",
+            "de": "Gesperrte IPs in der Jail",
+            "es": "IP bloqueadas en la jail"
+          }
+        },
+        {
+          "key": "server",
+          "type": "string",
+          "label": {
+            "en": "Server",
+            "fr": "Serveur",
+            "de": "Server",
+            "es": "Servidor"
+          }
+        }
+      ]
+    },
+    {
+      "key": "server_down",
+      "label": {
+        "en": "Fail2Ban: server unreachable",
+        "fr": "Fail2Ban : serveur injoignable",
+        "de": "Fail2Ban: Server nicht erreichbar",
+        "es": "Fail2Ban: servidor inaccesible"
+      },
+      "description": {
+        "en": "Fail2Ban stops answering: SSH refused, service stopped, permission lost.",
+        "fr": "Fail2Ban ne répond plus : SSH refusé, service arrêté, droits perdus.",
+        "de": "Fail2Ban antwortet nicht mehr: SSH abgelehnt, Dienst gestoppt, Rechte verloren.",
+        "es": "Fail2Ban deja de responder: SSH rechazado, servicio detenido, permisos perdidos."
+      },
+      "fields": [
+        {
+          "key": "reason",
+          "type": "select",
+          "label": {
+            "en": "Reason",
+            "fr": "Raison",
+            "de": "Grund",
+            "es": "Motivo"
+          },
+          "description": {
+            "en": "Leave empty for any reason.",
+            "fr": "Laissez vide pour toutes les raisons.",
+            "de": "Leer lassen für jeden Grund.",
+            "es": "Déjelo vacío para cualquier motivo."
+          },
+          "options": [
+            {
+              "value": "unreachable",
+              "label": {
+                "en": "Server unreachable",
+                "fr": "Serveur injoignable",
+                "de": "Server nicht erreichbar",
+                "es": "Servidor inaccesible"
+              }
+            },
+            {
+              "value": "not_running",
+              "label": {
+                "en": "Fail2Ban stopped",
+                "fr": "Fail2Ban arrêté",
+                "de": "Fail2Ban gestoppt",
+                "es": "Fail2Ban detenido"
+              }
+            },
+            {
+              "value": "auth",
+              "label": {
+                "en": "SSH login refused",
+                "fr": "Connexion SSH refusée",
+                "de": "SSH-Anmeldung abgelehnt",
+                "es": "Inicio de sesión SSH rechazado"
+              }
+            },
+            {
+              "value": "host_key",
+              "label": {
+                "en": "Host key changed",
+                "fr": "Clé d’hôte changée",
+                "de": "Hostschlüssel geändert",
+                "es": "Clave de host cambiada"
+              }
+            },
+            {
+              "value": "permission",
+              "label": {
+                "en": "Permission refused",
+                "fr": "Droits refusés",
+                "de": "Rechte verweigert",
+                "es": "Permisos denegados"
+              }
+            },
+            {
+              "value": "other",
+              "label": {
+                "en": "Other",
+                "fr": "Autre",
+                "de": "Sonstiges",
+                "es": "Otro"
+              }
+            }
+          ]
+        }
+      ],
+      "variables": [
+        {
+          "key": "server",
+          "type": "string",
+          "label": {
+            "en": "Server",
+            "fr": "Serveur",
+            "de": "Server",
+            "es": "Servidor"
+          }
+        },
+        {
+          "key": "reason",
+          "type": "string",
+          "label": {
+            "en": "Reason",
+            "fr": "Raison",
+            "de": "Grund",
+            "es": "Motivo"
+          }
+        },
+        {
+          "key": "message",
+          "type": "string",
+          "label": {
+            "en": "Message",
+            "fr": "Message",
+            "de": "Meldung",
+            "es": "Mensaje"
+          }
+        }
+      ]
+    },
+    {
+      "key": "server_up",
+      "label": {
+        "en": "Fail2Ban: server back",
+        "fr": "Fail2Ban : serveur de retour",
+        "de": "Fail2Ban: Server wieder da",
+        "es": "Fail2Ban: servidor de vuelta"
+      },
+      "description": {
+        "en": "Fail2Ban answers again after being unreachable.",
+        "fr": "Fail2Ban répond de nouveau après une coupure.",
+        "de": "Fail2Ban antwortet nach einem Ausfall wieder.",
+        "es": "Fail2Ban vuelve a responder tras una interrupción."
+      },
+      "variables": [
+        {
+          "key": "server",
+          "type": "string",
+          "label": {
+            "en": "Server",
+            "fr": "Serveur",
+            "de": "Server",
+            "es": "Servidor"
+          }
+        },
+        {
+          "key": "version",
+          "type": "string",
+          "label": {
+            "en": "Fail2Ban version",
+            "fr": "Version de Fail2Ban",
+            "de": "Fail2Ban-Version",
+            "es": "Versión de Fail2Ban"
+          }
+        }
+      ]
+    }
+  ],
+  "scene_actions": [
+    {
+      "key": "ban_ip",
+      "timeout_seconds": 30,
+      "label": {
+        "en": "Fail2Ban: ban an IP",
+        "fr": "Fail2Ban : bannir une IP",
+        "de": "Fail2Ban: IP sperren",
+        "es": "Fail2Ban: bloquear una IP"
+      },
+      "description": {
+        "en": "Bans an address (or a network in CIDR) in a jail, for the bantime of that jail.",
+        "fr": "Bannit une adresse (ou un réseau en CIDR) dans une jail, pour la durée de cette jail.",
+        "de": "Sperrt eine Adresse (oder ein Netz in CIDR) in einer Jail, für deren Sperrdauer.",
+        "es": "Bloquea una dirección (o una red en CIDR) en una jail, durante el tiempo de esa jail."
+      },
+      "fields": [
+        {
+          "key": "ip",
+          "type": "string",
+          "label": {
+            "en": "IP address",
+            "fr": "Adresse IP",
+            "de": "IP-Adresse",
+            "es": "Dirección IP"
+          },
+          "description": {
+            "en": "An IPv4 or IPv6 address, or a network such as 192.0.2.0/24. Scene variables are accepted.",
+            "fr": "Une adresse IPv4 ou IPv6, ou un réseau comme 192.0.2.0/24. Les variables de scène sont acceptées.",
+            "de": "Eine IPv4- oder IPv6-Adresse oder ein Netz wie 192.0.2.0/24. Szenenvariablen sind erlaubt.",
+            "es": "Una dirección IPv4 o IPv6, o una red como 192.0.2.0/24. Se aceptan variables de escena."
+          },
+          "placeholder": {
+            "en": "203.0.113.7",
+            "fr": "203.0.113.7",
+            "de": "203.0.113.7",
+            "es": "203.0.113.7"
+          },
+          "required": true
+        },
+        {
+          "key": "jail",
+          "type": "string",
+          "required": true,
+          "label": {
+            "en": "Jail",
+            "fr": "Jail",
+            "de": "Jail",
+            "es": "Jail"
+          },
+          "description": {
+            "en": "The name of an existing jail, such as recidive or sshd.",
+            "fr": "Le nom d’une jail existante, comme recidive ou sshd.",
+            "de": "Der Name einer vorhandenen Jail, etwa recidive oder sshd.",
+            "es": "El nombre de una jail existente, como recidive o sshd."
+          },
+          "placeholder": {
+            "en": "recidive",
+            "fr": "recidive",
+            "de": "recidive",
+            "es": "recidive"
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "key": "banned",
+          "type": "boolean",
+          "label": {
+            "en": "Newly banned",
+            "fr": "Nouvellement bannie",
+            "de": "Neu gesperrt",
+            "es": "Bloqueada ahora"
+          }
+        },
+        {
+          "key": "ip",
+          "type": "string",
+          "label": {
+            "en": "IP address",
+            "fr": "Adresse IP",
+            "de": "IP-Adresse",
+            "es": "Dirección IP"
+          }
+        },
+        {
+          "key": "jail",
+          "type": "string",
+          "label": {
+            "en": "Jail",
+            "fr": "Jail",
+            "de": "Jail",
+            "es": "Jail"
+          }
+        },
+        {
+          "key": "banned_count",
+          "type": "number",
+          "label": {
+            "en": "IPs banned in the jail",
+            "fr": "IP bannies dans la jail",
+            "de": "Gesperrte IPs in der Jail",
+            "es": "IP bloqueadas en la jail"
+          }
+        }
+      ]
+    },
+    {
+      "key": "unban_ip",
+      "timeout_seconds": 30,
+      "label": {
+        "en": "Fail2Ban: unban an IP",
+        "fr": "Fail2Ban : débannir une IP",
+        "de": "Fail2Ban: IP entsperren",
+        "es": "Fail2Ban: desbloquear una IP"
+      },
+      "description": {
+        "en": "Lifts the ban of an address, in one jail or in all of them.",
+        "fr": "Lève le bannissement d’une adresse, dans une jail ou dans toutes.",
+        "de": "Hebt die Sperre einer Adresse auf, in einer Jail oder in allen.",
+        "es": "Levanta el bloqueo de una dirección, en una jail o en todas."
+      },
+      "fields": [
+        {
+          "key": "ip",
+          "type": "string",
+          "label": {
+            "en": "IP address",
+            "fr": "Adresse IP",
+            "de": "IP-Adresse",
+            "es": "Dirección IP"
+          },
+          "description": {
+            "en": "Scene variables are accepted, such as the address of an ip_banned event.",
+            "fr": "Les variables de scène sont acceptées, comme l’adresse d’un événement IP bannie.",
+            "de": "Szenenvariablen sind erlaubt, etwa die Adresse eines Ereignisses „IP gesperrt“.",
+            "es": "Se aceptan variables de escena, como la dirección de un evento «IP bloqueada»."
+          },
+          "placeholder": {
+            "en": "203.0.113.7",
+            "fr": "203.0.113.7",
+            "de": "203.0.113.7",
+            "es": "203.0.113.7"
+          },
+          "required": true
+        },
+        {
+          "key": "jail",
+          "type": "string",
+          "required": false,
+          "label": {
+            "en": "Jail",
+            "fr": "Jail",
+            "de": "Jail",
+            "es": "Jail"
+          },
+          "description": {
+            "en": "Leave empty to unban it from every jail.",
+            "fr": "Laissez vide pour la débannir de toutes les jails.",
+            "de": "Leer lassen, um sie in allen Jails zu entsperren.",
+            "es": "Déjelo vacío para desbloquearla en todas las jails."
+          },
+          "placeholder": {
+            "en": "sshd",
+            "fr": "sshd",
+            "de": "sshd",
+            "es": "sshd"
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "key": "unbanned",
+          "type": "boolean",
+          "label": {
+            "en": "Was banned",
+            "fr": "Était bannie",
+            "de": "War gesperrt",
+            "es": "Estaba bloqueada"
+          }
+        },
+        {
+          "key": "ip",
+          "type": "string",
+          "label": {
+            "en": "IP address",
+            "fr": "Adresse IP",
+            "de": "IP-Adresse",
+            "es": "Dirección IP"
+          }
+        },
+        {
+          "key": "jail_count",
+          "type": "number",
+          "label": {
+            "en": "Jails it left",
+            "fr": "Jails quittées",
+            "de": "Verlassene Jails",
+            "es": "Jails abandonadas"
+          }
+        }
+      ]
+    },
+    {
+      "key": "check_ip",
+      "timeout_seconds": 30,
+      "label": {
+        "en": "Fail2Ban: check an IP",
+        "fr": "Fail2Ban : vérifier une IP",
+        "de": "Fail2Ban: IP prüfen",
+        "es": "Fail2Ban: comprobar una IP"
+      },
+      "description": {
+        "en": "Whether an address is banned now, and in which jails.",
+        "fr": "Si une adresse est bannie en ce moment, et dans quelles jails.",
+        "de": "Ob eine Adresse gerade gesperrt ist und in welchen Jails.",
+        "es": "Si una dirección está bloqueada ahora y en qué jails."
+      },
+      "fields": [
+        {
+          "key": "ip",
+          "type": "string",
+          "label": {
+            "en": "IP address",
+            "fr": "Adresse IP",
+            "de": "IP-Adresse",
+            "es": "Dirección IP"
+          },
+          "description": {
+            "en": "Scene variables are accepted.",
+            "fr": "Les variables de scène sont acceptées.",
+            "de": "Szenenvariablen sind erlaubt.",
+            "es": "Se aceptan variables de escena."
+          },
+          "placeholder": {
+            "en": "203.0.113.7",
+            "fr": "203.0.113.7",
+            "de": "203.0.113.7",
+            "es": "203.0.113.7"
+          },
+          "required": true
+        }
+      ],
+      "outputs": [
+        {
+          "key": "banned",
+          "type": "boolean",
+          "label": {
+            "en": "Banned",
+            "fr": "Bannie",
+            "de": "Gesperrt",
+            "es": "Bloqueada"
+          }
+        },
+        {
+          "key": "jails",
+          "type": "string",
+          "label": {
+            "en": "Jails",
+            "fr": "Jails",
+            "de": "Jails",
+            "es": "Jails"
+          }
+        },
+        {
+          "key": "jail_count",
+          "type": "number",
+          "label": {
+            "en": "Number of jails",
+            "fr": "Nombre de jails",
+            "de": "Anzahl der Jails",
+            "es": "Número de jails"
+          }
+        }
+      ]
+    },
+    {
+      "key": "get_summary",
+      "timeout_seconds": 30,
+      "label": {
+        "en": "Fail2Ban: read a summary",
+        "fr": "Fail2Ban : lire un résumé",
+        "de": "Fail2Ban: Zusammenfassung lesen",
+        "es": "Fail2Ban: leer un resumen"
+      },
+      "description": {
+        "en": "The counts of the followed jails and a sentence for a message.",
+        "fr": "Les compteurs des jails suivies et une phrase pour un message.",
+        "de": "Die Zähler der verfolgten Jails und ein Satz für eine Nachricht.",
+        "es": "Los contadores de las jails seguidas y una frase para un mensaje."
+      },
+      "outputs": [
+        {
+          "key": "banned",
+          "type": "number",
+          "label": {
+            "en": "IPs banned now",
+            "fr": "IP bannies",
+            "de": "Gesperrte IPs",
+            "es": "IP bloqueadas"
+          }
+        },
+        {
+          "key": "failed",
+          "type": "number",
+          "label": {
+            "en": "Failures now",
+            "fr": "Échecs en cours",
+            "de": "Aktuelle Fehlversuche",
+            "es": "Fallos actuales"
+          }
+        },
+        {
+          "key": "total_banned",
+          "type": "number",
+          "label": {
+            "en": "Bans since start",
+            "fr": "Bannissements depuis le démarrage",
+            "de": "Sperren seit dem Start",
+            "es": "Bloqueos desde el arranque"
+          }
+        },
+        {
+          "key": "jail_count",
+          "type": "number",
+          "label": {
+            "en": "Jails",
+            "fr": "Jails",
+            "de": "Jails",
+            "es": "Jails"
+          }
+        },
+        {
+          "key": "summary",
+          "type": "string",
+          "label": {
+            "en": "Summary",
+            "fr": "Résumé",
+            "de": "Zusammenfassung",
+            "es": "Resumen"
+          }
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,59 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="534" viewBox="0 0 800 534">
+  <!-- Cover of the Fail2Ban integration for Gladys Assistant (illustration, not
+       the logo of Fail2Ban). A server whose log scrolls by, the failed logins
+       stopped by a shield, and the count of banned addresses. Built into
+       cover.jpg by scripts/build-cover.sh. -->
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#0d1526"/>
+      <stop offset="1" stop-color="#1d2b47"/>
+    </linearGradient>
+    <linearGradient id="shield" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#e5534b"/>
+      <stop offset="1" stop-color="#a8231c"/>
+    </linearGradient>
+    <linearGradient id="rack" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#36435c"/>
+      <stop offset="1" stop-color="#232d40"/>
+    </linearGradient>
+  </defs>
+  <rect width="800" height="534" fill="url(#bg)"/>
+  <g opacity="0.07" stroke="#ffffff">
+    <path d="M0 133H800M0 267H800M0 400H800M200 0V534M400 0V534M600 0V534"/>
+  </g>
+
+  <!-- the title -->
+  <g font-family="DejaVu Sans, Arial, sans-serif">
+    <text x="48" y="104" font-size="66" font-weight="bold" fill="#ffffff">Fail2Ban</text>
+    <text x="52" y="146" font-size="26" fill="#b6c2d9">for Gladys Assistant</text>
+  </g>
+
+  <!-- the log of the server, the failures in red -->
+  <g font-family="DejaVu Sans Mono, monospace" font-size="17">
+    <rect x="40" y="190" width="430" height="290" rx="14" fill="#0a101c" stroke="#2f3d58" stroke-width="2"/>
+    <circle cx="66" cy="214" r="6" fill="#e5534b"/><circle cx="86" cy="214" r="6" fill="#d29922"/><circle cx="106" cy="214" r="6" fill="#3fb950"/>
+    <text x="62" y="256" fill="#7d8aa5">sshd: Accepted key for gladys</text>
+    <text x="62" y="288" fill="#ff7b72">sshd: Failed password 203.0.113.7</text>
+    <text x="62" y="320" fill="#ff7b72">sshd: Failed password 203.0.113.7</text>
+    <text x="62" y="352" fill="#ff7b72">sshd: Invalid user admin 203.0.113.7</text>
+    <text x="62" y="384" fill="#f0b72f">fail2ban: Ban 203.0.113.7</text>
+    <text x="62" y="416" fill="#7d8aa5">nginx: GET /wp-login.php 198.51.…</text>
+    <text x="62" y="448" fill="#f0b72f">fail2ban: Ban 198.51.100.20</text>
+  </g>
+
+  <!-- the shield stopping them -->
+  <g transform="translate(560 190)">
+    <path d="M100 0 L190 34 L190 120 C190 190, 150 236, 100 262 C50 236, 10 190, 10 120 L10 34 Z" fill="url(#shield)"/>
+    <path d="M100 18 L174 46 L174 120 C174 178, 142 218, 100 242 C58 218, 26 178, 26 120 L26 46 Z" fill="none" stroke="#ffd1cc" stroke-width="4" opacity="0.6"/>
+    <circle cx="100" cy="128" r="54" fill="none" stroke="#ffffff" stroke-width="14"/>
+    <path d="M62 166 L138 90" stroke="#ffffff" stroke-width="14" stroke-linecap="round"/>
+  </g>
+  <path d="M478 336 H548" stroke="#ff7b72" stroke-width="4" stroke-dasharray="10 8"/>
+
+  <!-- the count of banned addresses, as a widget tile -->
+  <g font-family="DejaVu Sans, Arial, sans-serif">
+    <rect x="560" y="470" width="200" height="44" rx="22" fill="#ffffff" opacity="0.95"/>
+    <circle cx="584" cy="492" r="8" fill="#e5534b"/>
+    <text x="600" y="499" font-size="19" font-weight="bold" fill="#1f2328">3 IPs banned</text>
+  </g>
+</svg>

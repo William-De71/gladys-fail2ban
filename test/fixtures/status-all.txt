@@ -1,0 +1,22 @@
+Status
+|- Number of jail:	2
+|- Jail list:	lab-app, lab-web
+`- Status for the jails:
+   |- Jail: lab-app
+   |  |- Filter
+   |  |  |- Currently failed:	0
+   |  |  |- Total failed:	6
+   |  |  `- File list:	/var/log/app.log
+   |  `- Actions
+   |     |- Currently banned:	0
+   |     |- Total banned:	2
+   |     `- Banned IP list:	
+   `- Jail: lab-web
+      |- Filter
+      |  |- Currently failed:	0
+      |  |- Total failed:	5
+      |  `- File list:	/var/log/web.log
+      `- Actions
+         |- Currently banned:	2
+         |- Total banned:	5
+         `- Banned IP list:	192.0.2.0/24 198.51.100.20

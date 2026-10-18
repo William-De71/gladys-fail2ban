@@ -1,0 +1,371 @@
+{
+  "devices": {
+    "server": {
+      "external_id": "ext:fail2ban:server:main",
+      "should_poll": false,
+      "params": ["FAIL2BAN_HOST"],
+      "features": [
+        {
+          "external_id": "ext:fail2ban:server:main:banned",
+          "category": "counter-sensor",
+          "type": "integer",
+          "min": 0,
+          "max": 1000000,
+          "read_only": true,
+          "has_feedback": false
+        },
+        {
+          "external_id": "ext:fail2ban:server:main:failed",
+          "category": "counter-sensor",
+          "type": "integer",
+          "min": 0,
+          "max": 1000000,
+          "read_only": true,
+          "has_feedback": false
+        },
+        {
+          "external_id": "ext:fail2ban:server:main:total_banned",
+          "category": "counter-sensor",
+          "type": "integer",
+          "min": 0,
+          "max": 1000000,
+          "read_only": true,
+          "has_feedback": false
+        },
+        {
+          "external_id": "ext:fail2ban:server:main:jails",
+          "category": "counter-sensor",
+          "type": "integer",
+          "min": 0,
+          "max": 1000,
+          "read_only": true,
+          "has_feedback": false
+        }
+      ]
+    },
+    "jail": {
+      "external_id": "ext:fail2ban:jail:nginx-http-auth",
+      "should_poll": false,
+      "params": ["FAIL2BAN_JAIL", "FAIL2BAN_LOGS"],
+      "features": [
+        {
+          "external_id": "ext:fail2ban:jail:nginx-http-auth:banned",
+          "category": "counter-sensor",
+          "type": "integer",
+          "min": 0,
+          "max": 1000000,
+          "read_only": true,
+          "has_feedback": false
+        },
+        {
+          "external_id": "ext:fail2ban:jail:nginx-http-auth:failed",
+          "category": "counter-sensor",
+          "type": "integer",
+          "min": 0,
+          "max": 1000000,
+          "read_only": true,
+          "has_feedback": false
+        },
+        {
+          "external_id": "ext:fail2ban:jail:nginx-http-auth:total_banned",
+          "category": "counter-sensor",
+          "type": "integer",
+          "min": 0,
+          "max": 1000000,
+          "read_only": true,
+          "has_feedback": false
+        },
+        {
+          "external_id": "ext:fail2ban:jail:nginx-http-auth:total_failed",
+          "category": "counter-sensor",
+          "type": "integer",
+          "min": 0,
+          "max": 1000000,
+          "read_only": true,
+          "has_feedback": false
+        },
+        {
+          "external_id": "ext:fail2ban:jail:nginx-http-auth:last_banned",
+          "category": "text",
+          "type": "text",
+          "min": 0,
+          "max": 0,
+          "read_only": true,
+          "has_feedback": false
+        }
+      ]
+    }
+  },
+  "manifest": {
+    "actions": ["test_connection", "show_public_key", "forget_host_key", "diagnostic"],
+    "config_schema": [
+      {
+        "key": "intro",
+        "type": "section"
+      },
+      {
+        "key": "host",
+        "type": "string"
+      },
+      {
+        "key": "port",
+        "type": "number"
+      },
+      {
+        "key": "username",
+        "type": "string"
+      },
+      {
+        "key": "auth_method",
+        "type": "select"
+      },
+      {
+        "key": "password",
+        "type": "secret"
+      },
+      {
+        "key": "key_help",
+        "type": "section"
+      },
+      {
+        "key": "command",
+        "type": "string"
+      },
+      {
+        "key": "host_key",
+        "type": "string"
+      },
+      {
+        "key": "options",
+        "type": "section"
+      },
+      {
+        "key": "jails",
+        "type": "string"
+      },
+      {
+        "key": "interval",
+        "type": "select"
+      },
+      {
+        "key": "language",
+        "type": "select"
+      }
+    ],
+    "scene_triggers": [
+      {
+        "key": "ip_banned",
+        "fields": [
+          {
+            "key": "jail",
+            "options": []
+          },
+          {
+            "key": "ip",
+            "options": []
+          }
+        ],
+        "variables": [
+          {
+            "key": "ip",
+            "type": "string"
+          },
+          {
+            "key": "jail",
+            "type": "string"
+          },
+          {
+            "key": "banned_count",
+            "type": "number"
+          },
+          {
+            "key": "total_banned",
+            "type": "number"
+          },
+          {
+            "key": "ban_seconds",
+            "type": "number"
+          },
+          {
+            "key": "permanent",
+            "type": "boolean"
+          },
+          {
+            "key": "until",
+            "type": "string"
+          },
+          {
+            "key": "server",
+            "type": "string"
+          }
+        ]
+      },
+      {
+        "key": "ip_unbanned",
+        "fields": [
+          {
+            "key": "jail",
+            "options": []
+          },
+          {
+            "key": "ip",
+            "options": []
+          }
+        ],
+        "variables": [
+          {
+            "key": "ip",
+            "type": "string"
+          },
+          {
+            "key": "jail",
+            "type": "string"
+          },
+          {
+            "key": "banned_count",
+            "type": "number"
+          },
+          {
+            "key": "server",
+            "type": "string"
+          }
+        ]
+      },
+      {
+        "key": "server_down",
+        "fields": [
+          {
+            "key": "reason",
+            "options": ["unreachable", "not_running", "auth", "host_key", "permission", "other"]
+          }
+        ],
+        "variables": [
+          {
+            "key": "server",
+            "type": "string"
+          },
+          {
+            "key": "reason",
+            "type": "string"
+          },
+          {
+            "key": "message",
+            "type": "string"
+          }
+        ]
+      },
+      {
+        "key": "server_up",
+        "fields": [],
+        "variables": [
+          {
+            "key": "server",
+            "type": "string"
+          },
+          {
+            "key": "version",
+            "type": "string"
+          }
+        ]
+      }
+    ],
+    "scene_actions": [
+      {
+        "key": "ban_ip",
+        "fields": ["ip", "jail"],
+        "outputs": [
+          {
+            "key": "banned",
+            "type": "boolean"
+          },
+          {
+            "key": "ip",
+            "type": "string"
+          },
+          {
+            "key": "jail",
+            "type": "string"
+          },
+          {
+            "key": "banned_count",
+            "type": "number"
+          }
+        ]
+      },
+      {
+        "key": "unban_ip",
+        "fields": ["ip", "jail"],
+        "outputs": [
+          {
+            "key": "unbanned",
+            "type": "boolean"
+          },
+          {
+            "key": "ip",
+            "type": "string"
+          },
+          {
+            "key": "jail_count",
+            "type": "number"
+          }
+        ]
+      },
+      {
+        "key": "check_ip",
+        "fields": ["ip"],
+        "outputs": [
+          {
+            "key": "banned",
+            "type": "boolean"
+          },
+          {
+            "key": "jails",
+            "type": "string"
+          },
+          {
+            "key": "jail_count",
+            "type": "number"
+          }
+        ]
+      },
+      {
+        "key": "get_summary",
+        "fields": [],
+        "outputs": [
+          {
+            "key": "banned",
+            "type": "number"
+          },
+          {
+            "key": "failed",
+            "type": "number"
+          },
+          {
+            "key": "total_banned",
+            "type": "number"
+          },
+          {
+            "key": "jail_count",
+            "type": "number"
+          },
+          {
+            "key": "summary",
+            "type": "string"
+          }
+        ]
+      }
+    ],
+    "widgets": [
+      {
+        "key": "overview",
+        "settings": [],
+        "options": {}
+      },
+      {
+        "key": "recent_bans",
+        "settings": ["jail", "count"],
+        "options": {}
+      }
+    ]
+  }
+}

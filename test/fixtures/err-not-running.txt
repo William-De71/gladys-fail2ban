@@ -1,0 +1,1 @@
+2026-10-17 21:24:37,019 fail2ban                [359]: ERROR   Failed to access socket path: /var/run/fail2ban/fail2ban.sock. Is fail2ban running?

@@ -1,0 +1,13 @@
+Gladys Fail2Ban integration
+Copyright 2026 William Deren
+
+This product is licensed under the Apache License, Version 2.0 (see LICENSE).
+
+It talks over SSH (the ssh2 library, MIT licence) to the fail2ban-client
+command of Fail2Ban (https://github.com/fail2ban/fail2ban, GPL-2.0), which it
+runs on the user's server but neither includes nor modifies. The files under
+test/fixtures are answers of fail2ban-client 1.1.0 read on a test server, with
+documentation addresses (RFC 5737, RFC 3849) only.
+
+This community integration is not affiliated with, endorsed or sponsored by
+the Fail2Ban project.
