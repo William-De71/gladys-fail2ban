@@ -57,7 +57,7 @@ test('declares the local transport only: an SSH connection to a server the user 
 test('requires the Gladys of widget button forms; no permission', () => {
   assert.equal(manifest.gladys_version, '>=5.2.0');
   assert.match(source('../src/widgets.js'), /fields: \[/, 'button forms need 5.2.0');
-  assert.deepEqual(manifest.categories, ['security', 'network']);
+  assert.deepEqual(manifest.categories, ['servers', 'security']);
   for (const key of ['location', 'network_wake', 'containers', 'network_discovery', 'webhooks']) {
     assert.equal(manifest[key], undefined, key);
   }
