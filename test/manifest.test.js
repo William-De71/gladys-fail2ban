@@ -54,8 +54,8 @@ test('declares the local transport only: an SSH connection to a server the user 
   assert.doesNotMatch(source('../src/app.js'), /publishTransports|GLADYS_PREFER_LOCAL|fetch\(/);
 });
 
-test('requires the Gladys of widget button forms; no permission', () => {
-  assert.equal(manifest.gladys_version, '>=5.2.0');
+test('requires the Gladys of the catalog fields (5.3.0); no permission', () => {
+  assert.equal(manifest.gladys_version, '>=5.3.0');
   assert.match(source('../src/widgets.js'), /fields: \[/, 'button forms need 5.2.0');
   assert.deepEqual(manifest.categories, ['servers', 'security']);
   for (const key of ['location', 'network_wake', 'containers', 'network_discovery', 'webhooks']) {
@@ -180,4 +180,20 @@ test('offers the languages of the code, automatic by default', () => {
   const field = byKey(manifest.config_schema).get('language');
   assert.deepEqual(values(field), [AUTO_LANGUAGE, ...LANGUAGES]);
   assert.equal(field.default, AUTO_LANGUAGE);
+});
+
+test('catalog fields of Gladys 5.3: search keywords and countries', () => {
+  assert.ok(Array.isArray(manifest.keywords), 'keywords is a list');
+  assert.ok(manifest.keywords.length >= 1 && manifest.keywords.length <= 10, '1 to 10 keywords');
+  for (const keyword of manifest.keywords) {
+    assert.ok(
+      keyword.trim().length >= 2 && keyword.trim().length <= 30,
+      `"${keyword}": 2 to 30 chars`,
+    );
+  }
+  const normalized = manifest.keywords.map((keyword) => keyword.trim().toLowerCase());
+  assert.equal(new Set(normalized).size, normalized.length, 'keywords are unique');
+  assert.ok(!normalized.includes(manifest.name.toLowerCase()), 'the name is already searched');
+  // Usable anywhere: no country restriction.
+  assert.equal(manifest.countries, undefined);
 });

@@ -5,7 +5,7 @@
 [![Licencia: Apache-2.0](https://img.shields.io/badge/licencia-Apache--2.0-blue.svg)](LICENSE)
 [![Última versión](https://img.shields.io/github/v/release/William-De71/gladys-fail2ban?sort=semver)](https://github.com/William-De71/gladys-fail2ban/releases)
 [![CI](https://img.shields.io/github/actions/workflow/status/William-De71/gladys-fail2ban/release.yml?branch=main&label=CI)](https://github.com/William-De71/gladys-fail2ban/actions/workflows/release.yml)
-[![Gladys](https://img.shields.io/badge/Gladys-%E2%89%A5%205.2.0-2f6fb5)](https://gladysassistant.com)
+[![Gladys](https://img.shields.io/badge/Gladys-%E2%89%A5%205.3.0-2f6fb5)](https://gladysassistant.com)
 
 ![Fail2Ban para Gladys Assistant](cover.jpg)
 
@@ -99,7 +99,7 @@ Los cambios hechos por Gladys (acciones de escena, botones de widget) no dispara
 
 ## Requisitos
 
-- Gladys Assistant **5.2.0** o posterior (botones de widget con formulario). Las instancias más antiguas no pueden instalar la integración.
+- Gladys Assistant **5.3.0** o posterior (palabras clave y países del catálogo de Gladys 5.3, botones de widget con formulario). Las instancias más antiguas no pueden instalar la integración.
 - Un servidor con Fail2Ban y SSH, y un usuario autorizado a ejecutar `fail2ban-client` sin contraseña: vea [docs/es.md](docs/es.md#preparar-el-servidor) para los tres comandos (usuario, regla sudoers, `authorized_keys`).
 
 ## Instalación

@@ -8,7 +8,7 @@ Fail2Ban ne répond que sur la machine qu’il protège (un socket Unix). L’in
 
 ## Prérequis
 
-- Gladys Assistant **5.2.0** ou plus récent (les boutons de widget à formulaire). Les instances plus anciennes ne peuvent pas installer l’intégration.
+- Gladys Assistant **5.3.0** ou plus récent (les boutons de widget à formulaire). Les instances plus anciennes ne peuvent pas installer l’intégration.
 - Une machine qui fait tourner Fail2Ban avec un serveur SSH, et son adresse sur votre réseau.
 - Un utilisateur SSH autorisé à lancer `fail2ban-client` sans mot de passe (voir ci-dessous).
 

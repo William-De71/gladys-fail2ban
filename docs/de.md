@@ -8,7 +8,7 @@ Fail2Ban antwortet nur auf dem Rechner, den es schützt (ein Unix-Socket). Die I
 
 ## Voraussetzungen
 
-- Gladys Assistant **5.2.0** oder neuer (Widget-Schaltflächen mit Formular). Ältere Instanzen können die Integration nicht installieren.
+- Gladys Assistant **5.3.0** oder neuer (Widget-Schaltflächen mit Formular). Ältere Instanzen können die Integration nicht installieren.
 - Ein Rechner mit Fail2Ban und einem SSH-Server, und seine Adresse in deinem Netzwerk.
 - Ein SSH-Benutzer, der `fail2ban-client` ohne Passwort ausführen darf (siehe unten).
 
