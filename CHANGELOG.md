@@ -5,6 +5,12 @@ follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and versions
 follow [Semantic Versioning](https://semver.org/). This file is generated at
 each release from the Conventional Commits: do not edit it by hand.
 
+## [0.2.0] - 2026-10-25
+
+### Added
+
+- list the integration under the new Servers shelf of the catalog ([fdf0861](https://github.com/William-De71/gladys-fail2ban/commit/fdf0861be264c92a81ae611d8c8f3a885bead8d9))
+
 ## [0.1.1] - 2026-10-24
 
 ### Security
@@ -24,5 +30,6 @@ each release from the Conventional Commits: do not edit it by hand.
 - Local transport: readings every 30 seconds to 5 minutes on one kept SSH connection; works with `status --all` (Fail2Ban 1.1) and jail by jail (older versions).
 - English, French, German and Spanish everywhere: settings, devices, widgets, scenes and documentation.
 
+[0.2.0]: https://github.com/William-De71/gladys-fail2ban/compare/v0.1.1...v0.2.0
 [0.1.1]: https://github.com/William-De71/gladys-fail2ban/compare/v0.1.0...v0.1.1
 [0.1.0]: https://github.com/William-De71/gladys-fail2ban/releases/tag/v0.1.0
